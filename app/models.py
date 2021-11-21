@@ -20,3 +20,8 @@ class Lesson(models.Model):
 
   def __str__(self):
     return self.title
+
+class Message(models.Model):
+    name = models.CharField(max_length=255, null=True, blank=False)
+    message = models.TextField()
+    email = models.CharField(max_length=255, null=True, blank=False)

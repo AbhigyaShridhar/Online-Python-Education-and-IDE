@@ -1,14 +1,15 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.decorators import login_required
-from .models import User, Lesson
+from .models import User, Lesson, Message
 from .forms import CreateForm
+import sys
 
 # Create your views here.
 def index(request):
@@ -154,3 +155,53 @@ class CreateLesson(LoginRequiredMixin, View):
         lesson.save()
         form.save_m2m()
         return HttpResponseRedirect(reverse(self.success_url, kwargs={'name': lesson.title}))
+
+class IDE(View):
+    template = "app/ide.html"
+
+    def get(self, request):
+        return render(request, self.template)
+
+    def post(self, request):
+        code_part = request.POST['code_area']
+        input_part = request.POST['input_area']
+        y = input_part
+        input_part = input_part.replace("\n"," ").split(" ")
+        def input():
+            a = input_part[0]
+            del input_part[0]
+            return a
+        try:
+            orig_stdout = sys.stdout
+            sys.stdout = open('file.txt', 'w')
+            exec(code_part)
+            sys.stdout.close()
+            sys.stdout=orig_stdout
+            output = open('file.txt', 'r').read()
+        except Exception as e:
+            sys.stdout.close()
+            sys.stdout=orig_stdout
+            output = e
+        print(output)
+        return render(request, self.template, {
+            "code":code_part,
+            "input":y,
+            "output":output
+            })
+
+class Contact(View):
+    template = "app/contact-us.html"
+
+    def get(self, request):
+        return render(request, self.template)
+
+    def post(self, request):
+        name = request.POST["name"]
+        email = request.POST["email"]
+        message = request.POST["message"]
+
+        m = Message.objects.create(name=name, email=email, message=message)
+        m.save()
+        return render(request, self.template, {
+            "message": "Thank you for contacting Us!!",
+        })

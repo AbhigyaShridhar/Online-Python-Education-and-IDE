@@ -26,15 +26,8 @@
                             text-dark text-decoration-none
                         "
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="40"
-                            height="32"
-                            class="me-2"
-                            viewBox="0 0 118 94"
-                            role="img"
-                        >
-                            <title>Bootstrap</title>
+
+                            <title>Code Share</title>
                             <path
                                 fill-rule="evenodd"
                                 clip-rule="evenodd"
@@ -42,15 +35,14 @@
                                 fill="currentColor"
                             ></path>
                         </svg>
-                        <span class="fs-4">Starter template</span>
+                        <span class="fs-4">Welcome to the public knowledge sharing platform of code share...</span>
                     </a>
                 </header>
 
                 <main>
-                    <h1>Get started with Bootstrap</h1>
+                    <h1>Join the Community</h1>
                     <p class="fs-5 col-md-8">
-                        Quickly and easily get started with Bootstrap's
-                        compiled, adfsdfsdfdsfes to get started.
+                        Create an account and join us. We hope you get to learn a lot here, and we are looking forward to see your contributions!!
                     </p>
 
                     <div class="mb-5">
@@ -65,58 +57,33 @@
 
                     <div class="row g-5">
                         <div class="col-md-6">
-                            <h2>Starter projects</h2>
+                            <h2>Try the IDE</h2>
                             <p>
-                                Ready to beyond the starter template? Check out
-                                these open source projects that you can quickly
-                                duplicate to a new GitHub repository.
+                                Use our very own python IDE to pracise code snippets from different tutorials
                             </p>
-                            <ul class="icon-list">
-                                <li>
-                                    <a
-                                        href="https://github.com/twbs/bootstrap-npm-starter"
-                                        rel="noopener"
-                                        target="_blank"
-                                        >Bootstrap npm starter</a
-                                    >
-                                </li>
-                                <li class="text-muted">
-                                    Bootstrap Parcel starter (coming soon!)
-                                </li>
-                            </ul>
+                            <br>
+                            <div class="mb-5">
+                                <a
+                                    href="{% url 'app:ide' %}"
+                                    class="btn btn-primary btn-lg px-4"
+                                    >Give it a try</a
+                                >
+                            </div>
                         </div>
 
                         <div class="col-md-6">
-                            <h2>Guides</h2>
+                            <h2>Contact Us</h2>
                             <p>
-                                Read more detailed instructions and
-                                documentation on using or contributing to
-                                Bootstrap.
+                                Have any furher questions? We are happy to answer
                             </p>
-                            <ul class="icon-list">
-                                <li>
-                                    <a
-                                        href="/docs/5.1/getting-started/introduction/"
-                                        >Bootstrap quick start guide</a
-                                    >
-                                </li>
-                                <li>
-                                    <a href="/docs/5.1/getting-started/webpack/"
-                                        >Bootstrap Webpack guide</a
-                                    >
-                                </li>
-                                <li>
-                                    <a href="/docs/5.1/getting-started/parcel/"
-                                        >Bootstrap Parcel guide</a
-                                    >
-                                </li>
-                                <li>
-                                    <a
-                                        href="/docs/5.1/getting-started/contribute/"
-                                        >Contributing to Bootstrap</a
-                                    >
-                                </li>
-                            </ul>
+                            <br>
+                            <div class="mb-5">
+                                <a
+                                    href="{% url 'app:contact' %}"
+                                    class="btn btn-primary btn-lg px-4"
+                                    >Get in touch</a
+                                >
+                            </div>
                         </div>
                     </div>
                 </main>

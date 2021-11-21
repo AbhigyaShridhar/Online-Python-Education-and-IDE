@@ -32,7 +32,7 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item"> <a class="nav-link active" aria-current="page" href="{% url 'app:create' %}">Create a tutorial</a> </li>
-                    <li class="nav-item"> <a class="nav-link" href="#">IDE</a> </li>
+                    <li class="nav-item"> <a class="nav-link" href="{% url 'app:ide' %}">IDE</a> </li>
                 </ul>
             </div>
         </div>
@@ -62,7 +62,7 @@
                                 <div class="d-flex align-items-center justify-content-between mt-1">
                                     <h6 class="font-weight-bold my-2">Tags: {{ lesson.language.name }}</h6>
                                 </div>
-                                <a href="{% url 'lesson' lesson.title %}" class="btn btn-success mt-5">Go to Lesson</a>
+                                <a href="{% url 'app:lesson' lesson.title %}" class="btn btn-success mt-5">Go to Lesson</a>
                         </div> <!-- End -->
                     </li> <!-- End -->
                     {% endfor %}

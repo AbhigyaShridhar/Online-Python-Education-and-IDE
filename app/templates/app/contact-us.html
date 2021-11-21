@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -8,7 +10,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         />
-        <link rel="stylesheet" href="contact-us.css" />
+        <link rel="stylesheet" href="{% static 'css/contact-us.css' %}" />
         <title>Contact Us</title>
     </head>
     <body>
@@ -16,42 +18,32 @@
             <div class="card">
                 <div class="top-div">
                     <h2>Get in touch!</h2>
-                    <p>Contact us for a quote,help to join the team</p>
-                </div>
-                <div class="stats">
-                    <div class="stats1">
-                        <span><i class="fa fa-map-marker"></i></span>
-                        <span>102 Street 2714 Don</span>
-                    </div>
-                    <div class="stats1">
-                        <span><i class="fa fa-phone"></i></span>
-                        <span>+02 123 4567</span>
-                    </div>
-                    <div class="stats1">
-                        <span><i class="fa fa-envelope"></i></span>
-                        <span>hello@flowbase.com</span>
-                    </div>
+                    <a href="{% url 'app:index' %}">HOME</a>
+                    {{ message }}
                 </div>
                 <div class="card1">
                     <div class="left">
+                      <form  action="{% url 'app:contact' %}" method="post">
+                        {% csrf_token %}
                         <div class="form-control">
-                            <input type="text" required="required" />
+                            <input name="name" type="text" required="required" />
                             <span> Enter your full name</span>
                             <i class="fa fa-users"></i>
                         </div>
                         <div class="form-control">
-                            <input type="text" required="required" />
+                            <input name="email" type="text" required="required" />
                             <span>E-mail</span> <i class="fa fa-envelope"></i>
                         </div>
                     </div>
                     <div class="right">
                         <div class="text-area">
-                            <textarea required="required"></textarea>
-                            <span>Message</span>
+                          Message:
+                            <input type="textarea" required="required" name="message" />
                         </div>
                     </div>
                 </div>
-                <div class="button"><button>Submit</button></div>
+                <input type="submit" value="Send" class="button">
+                      </form>
             </div>
         </div>
     </body>

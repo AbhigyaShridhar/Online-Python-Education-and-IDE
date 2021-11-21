@@ -14,4 +14,6 @@ urlpatterns = [
     path('search', views.search, name="search"),
     path('lesson/<str:name>', views.lesson, name="lesson"),
     path('lesson/new/create', views.CreateLesson.as_view(), name="create"),
+    path('try/ide', views.IDE.as_view(), name="ide"),
+    path('contact', views.Contact.as_view(), name="contact"),
 ]
