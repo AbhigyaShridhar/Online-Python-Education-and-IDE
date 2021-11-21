@@ -1,3 +1,5 @@
 django
 django_summernote
 django_crispy_forms
+django_cockroachdb
+dj_database_url
