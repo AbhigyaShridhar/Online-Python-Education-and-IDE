@@ -25,6 +25,7 @@
             <div class="form-group row">
               <div class="col-sm-7 mr-5 ml-3">
                 <label for="comment"><h4>Write Your Code Here</h4></label>
+                <h2>{{ exp.description }}</h2><br>
                 <textarea class="form-control" rows="14" name="code_area" style="border:1px solid grey; letter-spacing: 1px; font-family: 'Lucida Console'; font-size: 20px; " onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}">{{code}}</textarea>
               </div>
 
@@ -36,6 +37,12 @@
                 <div class="row">
                   <label for="comment"><h5>Output</h5></label>
                   <textarea class="form-control" rows="7" name="output_area" style="border:1px solid grey;" disabled>{{output}}</textarea>
+                  {% if out %}
+                  <label for="comment"><h5>Expected Output</h5></label>
+                    <textarea class="form-control" rows="7" name="output_area" style="border:1px solid grey;" disabled>{{ exp.output }}</textarea>
+                    <br>
+                    <a class="btn btn-outline-success float-right" href="{% url 'app:complete' lesson.id %}">Completed?</a>
+                  {% endif %}
                 </div>
               </div>
             </div>

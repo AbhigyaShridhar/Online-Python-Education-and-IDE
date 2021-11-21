@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(User)
 admin.site.register(Language)
 admin.site.register(Lesson)
+admin.site.register(Message)

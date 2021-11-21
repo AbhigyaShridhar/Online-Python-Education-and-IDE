@@ -1,5 +1,7 @@
 {% load static %}
 
+{% load crispy_forms_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,14 +13,46 @@
     <title>{{ lesson.title }}</title>
 </head>
 <body>
+  {% if done %}
+  <div class="alert alert-success" role="alert">
+  You have Completed This tutorial!!
+</div>
+{% endif %}
     <section id="block_content">
         <div class="col-md-6 container">
           <h1>{{ lesson.title }}</h1>
           <a class="forgot text-muted" href="#">Contributed by: {{ lesson.owner.username }}</a>
             <blockquote class="blockstyle"> <span class="triangle"></span>{{ lesson.content | safe }}</blockquote>
+            <a href="{% url 'app:browse' %}">Browse More</a>
+            <br><br>
         </div>
     </section>
-    <a href="{% url 'app:browse' %}">Browse More</a>
+    {% if question %}
+    <section id="block_content">
+        <div class="col-md-6 container">
+          <h1>Practise Questions</h1>
+          <h2>{{ q.title }}</h2>
+            <blockquote class="blockstyle">{{ q.description }}</blockquote>
+            <a href="{% url 'app:solve' q.id %}">Solve</a>
+            <br><br>
+        </div>
+        <br><br>
+    </section>
+    {% else %}
+    {% if lesson.owner == request.user %}
+    <section id="block_content">
+        <div class="col-md-6 container">
+          <h1>Add a question for practicing the concepts discussed in this tutorial</h1>
+          <form action="{% url 'app:action' lesson.id %}" method="post">
+            {% csrf_token %}
+            {{ form | crispy }}
+            <br>
+            <input type="submit" class="btn btn-primary" value="Add">
+          </form>
+        </div>
+    </section>
+    {% endif %}
+    {% endif %}
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </body>

@@ -7,8 +7,8 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.decorators import login_required
-from .models import User, Lesson, Message
-from .forms import CreateForm
+from .models import User, Lesson, Message, Question
+from .forms import CreateForm, QuestionForm
 import sys
 
 # Create your views here.
@@ -131,8 +131,22 @@ def lesson(request, name):
     return render(request, "app/lessons.html", {
       'message': "Query Does not Exist.."
     })
+  question = True
+  try:
+      q = Question.objects.get(lesson=L)
+  except Question.DoesNotExist:
+      question = False
+      q = None
+
+  done = False
+  if L in request.user.lessons.all():
+      done = True
   return render(request, "app/lesson.html", {
     'lesson': L,
+    'form': QuestionForm(),
+    'question': question,
+    'q': q,
+    'done': done,
   })
 
 class CreateLesson(LoginRequiredMixin, View):
@@ -156,21 +170,41 @@ class CreateLesson(LoginRequiredMixin, View):
         form.save_m2m()
         return HttpResponseRedirect(reverse(self.success_url, kwargs={'name': lesson.title}))
 
-class IDE(View):
-    template = "app/ide.html"
+class Contact(View):
+    template = "app/contact-us.html"
 
     def get(self, request):
         return render(request, self.template)
 
     def post(self, request):
+        name = request.POST["name"]
+        email = request.POST["email"]
+        message = request.POST["message"]
+
+        m = Message.objects.create(name=name, email=email, message=message)
+        m.save()
+        return render(request, self.template, {
+            "message": "Thank you for contacting Us!!",
+        })
+
+class IDE(View):
+    template = "app/ide.html"
+
+    def get(self, request):
+        return render(request, self.template, {
+            "output": "Remember to add an extra space at the end of each line of input"
+        })
+
+    def post(self, request):
         code_part = request.POST['code_area']
         input_part = request.POST['input_area']
         y = input_part
-        input_part = input_part.replace("\n"," ").split(" ")
+        input_part = input_part.split("\n")
+        for i in input_part:
+            j = i
+            i = i.split(" ")
         def input():
-            a = input_part[0]
-            del input_part[0]
-            return a
+            return input_part
         try:
             orig_stdout = sys.stdout
             sys.stdout = open('file.txt', 'w')
@@ -189,19 +223,83 @@ class IDE(View):
             "output":output
             })
 
-class Contact(View):
-    template = "app/contact-us.html"
+@login_required(login_url='/accounts/login/')
+def add_question(request, id):
+    try:
+        lesson = Lesson.objects.get(id=id)
+    except Lesson.DoesNotExist:
+        return HttpResponse("Invalid Query")
+    form = QuestionForm(request.POST)
+    q = form.save(commit=False)
+    q.lesson = lesson
+    q.save()
+    form.save_m2m()
+    return HttpResponseRedirect(reverse('app:lesson', kwargs={'name': lesson.title}))
 
-    def get(self, request):
-        return render(request, self.template)
+@login_required(login_url='/accounts/login/')
+def complete(request, id):
+    try:
+        lesson = Lesson.objects.get(id=id)
+        user = request.user
+        user.lessons.add(lesson)
+    except Lesson.DoesNotExist:
+        return HttpResponse("Invalid Query")
+    return HttpResponseRedirect(reverse('app:profile', kwargs={'name': user.username}))
 
-    def post(self, request):
-        name = request.POST["name"]
-        email = request.POST["email"]
-        message = request.POST["message"]
+class Solve(View):
+    template = "app/ide.html"
 
-        m = Message.objects.create(name=name, email=email, message=message)
-        m.save()
+    def get(self, request, id):
+        try:
+            l = Lesson.objects.get(id=id)
+        except Lesson.DoesNotExist:
+            return HttpResponse("Invalid Query")
+        try:
+            exp = Question.objects.get(lesson=l)
+        except Question.DoesNotExist:
+            return HttpResponse("Invalid Query")
         return render(request, self.template, {
-            "message": "Thank you for contacting Us!!",
+            "output": "Remember to add an extra space at the end of each line of input",
+            'out': True,
+            'exp': exp,
+            'lesson': l,
         })
+
+    def post(self, request, id):
+        try:
+            l = Lesson.objects.get(id=id)
+        except Lesson.DoesNotExist:
+            return HttpResponse("Invalid Query")
+        try:
+            exp = Question.objects.get(lesson=l)
+        except Question.DoesNotExist:
+            return HttpResponse("Invalid Query")
+        code_part = request.POST['code_area']
+        input_part = request.POST['input_area']
+        y = input_part
+        input_part = input_part.split("\n")
+        for i in input_part:
+            j = i
+            i = i.split(" ")
+        def input():
+            return input_part
+        try:
+            orig_stdout = sys.stdout
+            sys.stdout = open('file.txt', 'w')
+            exec(code_part)
+            sys.stdout.close()
+            sys.stdout=orig_stdout
+            output = open('file.txt', 'r').read()
+        except Exception as e:
+            sys.stdout.close()
+            sys.stdout=orig_stdout
+            output = e
+        #print(output)
+        return render(request, self.template, {
+            "code":code_part,
+            "input":y,
+            "output":output,
+            'out': True,
+            'exp': exp,
+            'lesson': l,
+            })

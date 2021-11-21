@@ -1,5 +1,5 @@
 from django import forms
-from .models import Lesson
+from .models import Lesson, Question
 from django_summernote.widgets import SummernoteWidget
 
 class CreateForm(forms.ModelForm):
@@ -10,3 +10,9 @@ class CreateForm(forms.ModelForm):
     widgets = {
             'content': SummernoteWidget(),
         }
+
+class QuestionForm(forms.ModelForm):
+
+    class Meta:
+        model = Question
+        fields = ['title', 'description', 'output']

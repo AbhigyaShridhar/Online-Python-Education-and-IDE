@@ -16,4 +16,7 @@ urlpatterns = [
     path('lesson/new/create', views.CreateLesson.as_view(), name="create"),
     path('try/ide', views.IDE.as_view(), name="ide"),
     path('contact', views.Contact.as_view(), name="contact"),
+    path('lessons/question/add/<int:id>', views.add_question, name="action"),
+    path('complete/<int:id>', views.complete, name="complete"),
+    path('lessons/<int:id>/questions/solve', views.Solve.as_view(), name="solve"),
 ]

@@ -25,3 +25,9 @@ class Message(models.Model):
     name = models.CharField(max_length=255, null=True, blank=False)
     message = models.TextField()
     email = models.CharField(max_length=255, null=True, blank=False)
+
+class Question(models.Model):
+    title = models.CharField(max_length=1000, null=True, blank=False)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True, blank=False)
+    description = models.TextField()
+    output = models.TextField()
